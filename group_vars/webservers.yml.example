@@ -1,0 +1,6 @@
+---
+
+server_git_repo: git://github.com/oberon-chat/oberon-server.git
+
+lets_encrypt_domain: "example.com"
+lets_encrypt_email: "<email>"

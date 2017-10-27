@@ -1,0 +1,36 @@
+---
+
+- name: Add apt repository
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+    state: present
+
+- name: Add apt repository key
+  apt_key:
+    url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    state: present
+
+- name: Install packages
+  apt:
+    name:
+      - postgresql-9.6
+      - postgresql-contrib
+      - python-psycopg2
+    state: present
+    update_cache: true
+  become: true
+
+- name: Create database
+  postgresql_db:
+    name: "{{ postgresql_database }}"
+  become: true
+  become_user: postgres
+
+- name: Create users
+  postgresql_user:
+    db: "{{ postgresql_database }}"
+    name: "{{ postgresql_username }}"
+    password: "{{ postgresql_password }}"
+    role_attr_flags: "CREATEDB,NOSUPERUSER"
+  become: true
+  become_user: postgres
