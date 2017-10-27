@@ -1,5 +1,16 @@
 ---
 
-postgresql_database: "<database>"
-postgresql_username: "<username>"
-postgresql_password: "<password>"
+oauth2_postgres_db: oberon_oauth2
+oauth2_postgres_host: localhost
+oauth2_postgres_user: postgres
+oauth2_postgres_pass: postgres
+
+server_postgres_db: oberon_server
+server_postgres_host: localhost
+server_postgres_user: postgres
+server_postgres_pass: postgres
+
+webhook_postgres_db: oberon_webhook
+webhook_postgres_host: localhost
+webhook_postgres_user: postgres
+webhook_postgres_pass: postgres
