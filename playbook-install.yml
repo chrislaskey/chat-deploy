@@ -1,25 +1,33 @@
 ---
 
-  # This noop is required to gather `ansible_env` facts
+# This noop is required to gather `ansible_env` facts
 - hosts: all
 
-- hosts: dbservers
+- hosts: build
+  roles:
+    - common
+    - elixir
+
+- hosts: database
   roles:
     - common
     - postgres
 
-- hosts: webservers
+- hosts: client
+  roles:
+    - common
+    - node
+
+- hosts: server
   environment:
     PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
   roles:
     - common
-    - elixir
-    # - node
     # - app_server
     # - nginx
     # - ssl
 
 #   # Run nginx again to ensure SSL changes are in effect
-# - hosts: webservers
+# - hosts: server
 #   roles:
 #     - nginx

@@ -39,18 +39,20 @@ Copy group var files:
 
 ```bash
 $ cp group_vars/all.yml.example group_vars/all.yml
-$ cp group_vars/buildservers.yml.example group_vars/buildservers.yml
-$ cp group_vars/dbservers.yml.example group_vars/dbservers.yml
-$ cp group_vars/webservers.yml.example group_vars/webservers.yml
+$ cp group_vars/build.yml.example group_vars/build.yml
+$ cp group_vars/client.yml.example group_vars/client.yml
+$ cp group_vars/database.yml.example group_vars/database.yml
+$ cp group_vars/server.yml.example group_vars/server.yml
 ```
 
 Update group var values:
 
 ```
 $ vim group_vars/all.yml
-$ vim group_vars/buildservers.yml
-$ vim group_vars/dbservers.yml
-$ vim group_vars/webservers.yml
+$ vim group_vars/build.yml
+$ vim group_vars/client.yml
+$ vim group_vars/database.yml
+$ vim group_vars/server.yml
 ```
 
 Transfer and run the bootstrap script for each remote host:

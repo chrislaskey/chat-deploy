@@ -1,8 +1,11 @@
-[buildservers]
-insert-your-host-here.com ansible_port=22 ansible_user=ubuntu
+[build]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
 
-[webservers]
-insert-your-host-here.com ansible_port=22 ansible_user=ubuntu
+[client]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
 
-[dbservers]
-insert-your-host-here.com ansible_port=22 ansible_user=ubuntu
+[server]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
+
+[database]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
