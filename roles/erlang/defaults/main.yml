@@ -1,0 +1,10 @@
+---
+
+erlang_version: "1:20.1"
+
+erlang:
+  deb_dir: /tmp
+  deb_dest: /tmp/erlang-solutions_1.0_all.deb
+  deb_src: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+  packages:
+  - "esl-erlang"

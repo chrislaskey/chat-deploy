@@ -1,16 +1,21 @@
 ---
 
-oauth2_postgres_db: oberon_oauth2
-oauth2_postgres_host: localhost
-oauth2_postgres_user: postgres
-oauth2_postgres_pass: postgres
+elixir_version: "1.5.2-1"
+erlang_version: "1:20.1"
 
-server_postgres_db: oberon_server
-server_postgres_host: localhost
-server_postgres_user: postgres
-server_postgres_pass: postgres
-
-webhook_postgres_db: oberon_webhook
-webhook_postgres_host: localhost
-webhook_postgres_user: postgres
-webhook_postgres_pass: postgres
+postgres:
+  oauth2:
+    db: oberon_oauth2
+    host: localhost
+    user: postgres
+    pass: postgres
+  server:
+    db: oberon_server
+    host: localhost
+    user: postgres
+    pass: postgres
+  webhook:
+    db: oberon_webhook
+    host: localhost
+    user: postgres
+    pass: postgres
