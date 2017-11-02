@@ -19,3 +19,8 @@ postgres:
     host: localhost
     user: postgres
     pass: postgres
+
+server_dir: "/home/{{ ansible_user }}/chat_server"
+server_build_dir: "{{ server_dir }}/build"
+server_current_dir: "{{ server_dir }}/current"
+server_releases_dir: "{{ server_dir }}/releases"

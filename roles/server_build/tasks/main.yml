@@ -1,0 +1,45 @@
+---
+
+- name: Create server directory
+  file:
+    path: "{{ server_dir }}"
+    state: directory
+
+- name: Clean build directory
+  file:
+    path: "{{ server_build_dir }}/"
+    state: absent
+
+- name: Clone project repository
+  git:
+    repo: "{{ server_git_repo }}"
+    version: "{{ server_git_version }}"
+    dest: "{{ server_build_dir }}"
+    accept_hostkey: true
+
+- name: Create build env file
+  copy:
+    src: "{{ server_build_dir }}/.envrc.example"
+    dest: "{{ server_build_dir }}/.envrc"
+    remote_src: true
+
+# - name: Set release version in rel/config.exs
+#   lineinfile:
+#     dest: "{{ server_build_dir }}/rel/config.exs"
+#     regexp: "set version: "
+#     line: "  set version: \"{{ app_version }}\""
+
+- name: Install elixir mix dependencies
+  command: bash -lc "source .envrc && mix deps.get" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
+
+- name: Compile elixir mix dependencies
+  command: bash -lc "source .envrc && mix compile" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
+
+- name: Run mix release
+  command: bash -lc "source .envrc && mix release" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
