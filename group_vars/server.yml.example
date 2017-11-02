@@ -1,6 +1,6 @@
 ---
 
-server_git_repo: git://github.com/oberon-chat/oberon-server.git
+erlang_cookie: "6hNpFxXDbxatfJ9sRFiKo7vu0AkRVTYmr1AxDsDibf1a0bqCWWsJTmo1usgFTuCA"
 
 lets_encrypt_domain: "example.com"
 lets_encrypt_email: "<email>"

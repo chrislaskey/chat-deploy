@@ -21,9 +21,14 @@ server_git_version: master
 
 server_dir: "/home/{{ ansible_user }}/chat_server"
 server_build_dir: "{{ server_dir }}/build"
-server_build_tarball: "{{ server_build_dir }}/**/chat_server.tar.gz"
+server_build_tarball: "{{ server_build_dir }}/_build/prod/rel/chat_server/releases/**/chat_server.tar.gz"
 server_current_dir: "{{ server_dir }}/current"
+server_next_dir: "{{ server_dir }}/next"
+server_previous_dir: "{{ server_dir }}/previous"
 server_releases_dir: "{{ server_dir }}/releases"
+server_release_tarball: "{{ server_releases_dir }}/{{ server_git_version }}.tar.gz"
+
+server_app_binary: "{{ server_current_dir }}/bin/chat_server"
 
 elixir_version: "1.5.2-1"
 erlang_version: "1:20.1"

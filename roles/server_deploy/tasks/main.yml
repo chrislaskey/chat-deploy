@@ -5,6 +5,8 @@
     path: "{{ server_dir }}"
     state: directory
 
+# Get release
+
 - name: Create releases directory
   file:
     path: "{{ server_releases_dir }}"
@@ -21,6 +23,8 @@
     dest: rsync://{{ inventory_hostname }}"{{ server_release_tarball }}"
   delegate_to: "{{ groups['build'][0] }}"
   when: local_release_tarball.stat.exists == False 
+
+# Open release
 
 - name: Remove next release directory
   file:
@@ -39,6 +43,18 @@
     copy: no
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+
+# Update release files
+
+- name: Create vm.args from template
+  template:
+    src: vm.args.j2
+    dest: "{{ server_next_dir }}/vm.args"
+
+- name: Replace vm.args
+  shell: "mv {{ server_next_dir }}/vm.args {{ server_next_dir }}/releases/**/"
+
+# Update release directories
 
 - name: Remove previous release directory
   file:

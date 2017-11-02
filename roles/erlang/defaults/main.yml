@@ -1,6 +1,7 @@
 ---
 
 erlang_version: "1:20.1"
+erlang_cookie: "oEGq2GSnvjp0AMf3fEgFwt1zOriH7tY8r9J4FGkg8MW1XwvJt6B5mmEkjOCdT2h4"
 
 erlang:
   deb_dir: /tmp
