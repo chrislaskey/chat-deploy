@@ -1,5 +1,7 @@
 ---
 
+# Setup build
+
 - name: Create server directory
   file:
     path: "{{ server_dir }}"
@@ -23,11 +25,7 @@
     dest: "{{ server_build_dir }}/.envrc"
     remote_src: true
 
-# - name: Set release version in rel/config.exs
-#   lineinfile:
-#     dest: "{{ server_build_dir }}/rel/config.exs"
-#     regexp: "set version: "
-#     line: "  set version: \"{{ app_version }}\""
+# Build release
 
 - name: Install elixir mix dependencies
   command: bash -lc "source .envrc && mix deps.get" chdir="{{ server_build_dir }}"
@@ -43,3 +41,13 @@
   command: bash -lc "source .envrc && mix release" chdir="{{ server_build_dir }}"
   environment:
     MIX_ENV: "prod"
+
+# Archive release
+
+- name: Create releases directory
+  file:
+    path: "{{ server_releases_dir }}"
+    state: directory
+
+- name: Move build tarball into releases directory
+  shell: "mv {{ server_build_tarball }} {{ server_release_tarball }}"

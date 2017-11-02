@@ -1,0 +1,58 @@
+---
+
+- name: Create server directory
+  file:
+    path: "{{ server_dir }}"
+    state: directory
+
+- name: Create releases directory
+  file:
+    path: "{{ server_releases_dir }}"
+    state: directory
+
+- name: Check if release tarball is already available
+  stat:
+    path: "{{ server_release_tarball }}"
+  register: local_release_tarball
+
+- name: Fetch release tarball from build server
+  synchronize:
+    src: "{{ server_release_tarball }}"
+    dest: rsync://{{ inventory_hostname }}"{{ server_release_tarball }}"
+  delegate_to: "{{ groups['build'][0] }}"
+  when: local_release_tarball.stat.exists == False 
+
+- name: Remove next release directory
+  file:
+    path: "{{ server_previous_dir }}"
+    state: absent
+
+- name: Create next release directory
+  file:
+    path: "{{ server_next_dir }}"
+    state: directory
+
+- name: Extract the release tarball
+  unarchive:
+    src: "{{ server_release_tarball }}"
+    dest: "{{ server_next_dir }}"
+    copy: no
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Remove previous release directory
+  file:
+    path: "{{ server_previous_dir }}"
+    state: absent
+
+- name: Check if current release directory exists
+  stat:
+    path: "{{ server_current_dir }}"
+  register: current_release
+
+- name: Move current release into previous
+  command: "mv {{ server_current_dir }} {{ server_previous_dir }}"
+  when: current_release.stat.exists == True
+
+- name: Move next release into current
+  command: "mv {{ server_next_dir }} {{ server_current_dir }}"

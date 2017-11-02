@@ -5,27 +5,28 @@
 
 - hosts: build
   roles:
-    - common
-    - elixir
+    # - common
+    # - elixir
+    - server_build
 
-- hosts: database
-  roles:
-    - common
-    - postgres
+# - hosts: database
+#   roles:
+#     - common
+#     - postgres
 
-- hosts: client
-  roles:
-    - common
-    - node
+# - hosts: client
+#   roles:
+#     - common
+#     - node
 
-- hosts: server
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
-  roles:
-    - common
-    # - app_server
-    # - nginx
-    # - ssl
+# - hosts: server
+#   environment:
+#     PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
+#   roles:
+#     - common
+#     # - app_server
+#     # - nginx
+#     # - ssl
 
 #   # Run nginx again to ensure SSL changes are in effect
 # - hosts: server
