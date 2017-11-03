@@ -25,6 +25,7 @@
   roles:
     - common
     - server_deploy
+    - server_start
     # - nginx
     # - ssl
 

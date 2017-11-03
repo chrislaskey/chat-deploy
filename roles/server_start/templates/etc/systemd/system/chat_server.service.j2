@@ -1,0 +1,18 @@
+[Unit]
+Description=Chat Server
+After=network.target
+Requires=network.target
+
+[Service]
+ExecReload={{ server_app_binary }} restart
+ExecStart={{ server_app_binary }} start
+ExecStop={{ server_app_binary }} stop
+Restart=on-failure
+TimeoutSec=10
+Type=forking
+User={{ ansible_user }}
+Group={{ ansible_user }}
+WorkingDirectory={{ server_current_dir }}
+
+[Install]
+WantedBy=multi-user.target
