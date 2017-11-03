@@ -4,13 +4,7 @@
   apt:
     name: nginx
     state: present
-  become: true
-
-- name: Install nginx config
-  template:
-    src: default.j2
-    dest: /etc/nginx/sites-available/oberon-server
-  become: true
+  become: yes
 
 - name: Add log rotation
   template:
@@ -19,20 +13,60 @@
     owner: root
     group: root
     mode: 0644
+  become: yes
 
-- name: Enable site
-  file:
-    src: /etc/nginx/sites-available/oberon-server
-    dest: /etc/nginx/sites-enabled/oberon-server
-    state: link
-  become: true
+- name: Enable nginx on restart
+  shell: systemctl enable nginx
+  become: yes
 
 - name: Disable default site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  become: true
+  become: yes
+
+# Site config - oauth2
+
+# - name: Install nginx config
+#   template:
+#     src: default.j2
+#     dest: /etc/nginx/sites-available/oberon-server-oauth2
+#   vars:
+#     name: "chat-server-oauth2"
+#     port: "{{ server_oauth2_port }}"
+#   become: yes
+
+# - name: Enable site
+#   file:
+#     src: /etc/nginx/sites-available/oberon-server-oauth2
+#     dest: /etc/nginx/sites-enabled/oberon-server-oauth2
+#     state: link
+#   become: yes
+
+# Site config - websocket
+
+- name: Install nginx config
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/oberon-server-websocket
+  vars:
+    name: "chat-server-websocket"
+    port: "{{ server_websocket_port }}"
+  become: yes
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/oberon-server-websocket
+    dest: /etc/nginx/sites-enabled/oberon-server-websocket
+    state: link
+  become: yes
+
+# After site configs
+
+- name: Ensure nginx is started
+  shell: systemctl start nginx
+  become: yes
 
 - name: Reload nginx configs
   shell: systemctl reload nginx
-  become: true
+  become: yes

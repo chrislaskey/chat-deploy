@@ -23,6 +23,6 @@
   shell: systemctl daemon-reload
   become: yes
 
-- name: Start chat_server service
-  shell: systemctl start chat_server
+- name: Restart chat_server
+  shell: systemctl restart chat_server
   become: yes
