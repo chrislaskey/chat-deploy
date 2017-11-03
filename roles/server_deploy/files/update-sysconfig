@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+import os
+import re
+from optparse import OptionParser
+
+
+"""
+Takes an elixir sys.config template file and replaces all placeholder instances
+with env values. For instance this:
+
+    <<"PLACEHOLDER_PORT">>
+
+Is replaced with the `os.environ["PORT"]` value, becoming:
+
+    <<"4000">>
+
+Placeholders are dynamically identified by the pattern `PLACEHOLDER_*`.
+"""
+
+
+def replace_placeholder(text, key, value):
+    placeholder = "<<\"{}\">>".format(key)
+    replacement = "<<\"{}\">>".format(value)
+    return text.replace(placeholder, replacement)
+
+def replace_placeholders(text):
+    placeholders = re.findall(r'<<"(PLACEHOLDER_.*)">>', text)
+    for key in placeholders:
+       value = os.environ.get(key) or ""
+       text = replace_placeholder(text, key, value)
+    return text
+
+def main():
+    parser = OptionParser("Usage: %prog <source-file> <destination-file>")
+    (options, args) = parser.parse_args()
+
+    if len(args) != 2:
+        parser.error("Incorrect number of arguments")
+
+    with open(args[0]) as input:
+        with open(args[1], "w") as output:
+            text = input.read()
+            result = replace_placeholders(text)
+            output.write(result)
+
+
+if __name__ == "__main__":
+    main()

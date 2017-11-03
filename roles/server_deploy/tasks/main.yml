@@ -44,7 +44,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
-# Update release files
+# Update release files - vm.args
 
 - name: Create vm.args from template
   template:
@@ -53,6 +53,23 @@
 
 - name: Replace vm.args
   shell: "mv {{ server_next_dir }}/vm.args {{ server_next_dir }}/releases/**/"
+
+# Update release files - sys.config
+
+- name: Backup sys.config template
+  shell: "cp {{ server_next_dir }}/releases/**/sys.config {{ server_next_dir }}/sys.config.template"
+
+- name: Add sys.config updater
+  copy:
+    src: "update-sysconfig"
+    dest: "{{ server_next_dir }}/update-sysconfig"
+    mode: 0755
+
+- name: Update sys.config file
+  command: bash -lc "./update-sysconfig sys.config.template sys.config" chdir="{{ server_next_dir }}"
+
+- name: Replace sys.config
+  shell: "mv {{ server_next_dir }}/sys.config {{ server_next_dir }}/releases/**/"
 
 # Update release directories
 
