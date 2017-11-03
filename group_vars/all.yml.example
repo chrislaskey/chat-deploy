@@ -1,23 +1,28 @@
 ---
 
+server_git_version: master
+server_git_repo: git://github.com/oberon-chat/chat-server.git
+
+local_dir: "{{ playbook_dir }}"
+local_config_dir: "{{ local_dir }}/configs"
+local_server_config: "{{ local_config_dir }}/server"
+
 postgres:
   oauth2:
-    db: oberon_oauth2
-    host: localhost
-    user: postgres
-    pass: postgres
+    db: "{{ lookup('env', 'CHAT_OAUTH2_POSTGRES_DB') }}"
+    host: "{{ lookup('env', 'CHAT_OAUTH2_POSTGRES_HOST') }}"
+    user: "{{ lookup('env', 'CHAT_OAUTH2_POSTGRES_USER') }}"
+    pass: "{{ lookup('env', 'CHAT_OAUTH2_POSTGRES_PASS') }}"
   server:
-    db: oberon_server
-    host: localhost
-    user: postgres
-    pass: postgres
+    db: "{{ lookup('env', 'CHAT_SERVER_POSTGRES_DB') }}"
+    host: "{{ lookup('env', 'CHAT_SERVER_POSTGRES_HOST') }}"
+    user: "{{ lookup('env', 'CHAT_SERVER_POSTGRES_USER') }}"
+    pass: "{{ lookup('env', 'CHAT_SERVER_POSTGRES_PASS') }}"
   webhook:
-    db: oberon_webhook
-    host: localhost
-    user: postgres
-    pass: postgres
-
-server_git_version: master
+    db: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_DB') }}"
+    host: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_HOST') }}"
+    user: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_USER') }}"
+    pass: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_PASS') }}"
 
 server_dir: "/home/{{ ansible_user }}/chat_server"
 server_build_dir: "{{ server_dir }}/build"
@@ -27,8 +32,12 @@ server_next_dir: "{{ server_dir }}/next"
 server_previous_dir: "{{ server_dir }}/previous"
 server_releases_dir: "{{ server_dir }}/releases"
 server_release_tarball: "{{ server_releases_dir }}/{{ server_git_version }}.tar.gz"
-
 server_app_binary: "{{ server_current_dir }}/bin/chat_server"
 
 elixir_version: "1.5.2-1"
 erlang_version: "1:20.1"
+
+erlang_cookie: "6hNpFxXDbxatfJ9sRFiKo7vu0AkRVTYmr1AxDsDibf1a0bqCWWsJTmo1usgFTuCA"
+
+lets_encrypt_domain: "example.com"
+lets_encrypt_email: "<email>"

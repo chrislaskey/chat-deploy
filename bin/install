@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+source configs/server
+
 ansible-playbook -i hosts/production playbook-install.yml

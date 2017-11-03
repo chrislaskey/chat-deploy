@@ -9,15 +9,15 @@
     - elixir
     - server_build
 
-# - hosts: database
-#   roles:
-#     - common
-#     - postgres
+- hosts: database
+  roles:
+    - common
+    - postgres
 
-# - hosts: client
-#   roles:
-#     - common
-#     - node
+- hosts: client
+  roles:
+    - common
+    - node
 
 - hosts: server
   environment:
@@ -25,9 +25,8 @@
   roles:
     - common
     - server_deploy
-#     # - app_server
-#     # - nginx
-#     # - ssl
+    # - nginx
+    # - ssl
 
 #   # Run nginx again to ensure SSL changes are in effect
 # - hosts: server

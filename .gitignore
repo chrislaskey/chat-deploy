@@ -5,3 +5,5 @@ group_vars/client.yml
 group_vars/database.yml
 group_vars/server.yml
 *.retry
+tmp/*
+configs/*

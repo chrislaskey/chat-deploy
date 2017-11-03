@@ -5,6 +5,13 @@
     path: "{{ server_dir }}"
     state: directory
 
+# Add config
+
+- name: Create releases directory
+  copy:
+    src: "{{ local_server_config }}"
+    dest: "{{ server_config }}"
+
 # Get release
 
 - name: Create releases directory
@@ -66,7 +73,7 @@
     mode: 0755
 
 - name: Update sys.config file
-  command: bash -lc "./update-sysconfig sys.config.template sys.config" chdir="{{ server_next_dir }}"
+  command: bash -lc "source {{ server_config }} && ./update-sysconfig sys.config.template sys.config" chdir="{{ server_next_dir }}"
 
 - name: Replace sys.config
   shell: "mv {{ server_next_dir }}/sys.config {{ server_next_dir }}/releases/**/"

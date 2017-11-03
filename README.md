@@ -39,19 +39,13 @@ Copy group var files:
 
 ```bash
 $ cp group_vars/all.yml.example group_vars/all.yml
-$ cp group_vars/build.yml.example group_vars/build.yml
-$ cp group_vars/client.yml.example group_vars/client.yml
-$ cp group_vars/database.yml.example group_vars/database.yml
 $ cp group_vars/server.yml.example group_vars/server.yml
 ```
 
-Update group var values:
+(Optional) Review and update group var values:
 
 ```
 $ vim group_vars/all.yml
-$ vim group_vars/build.yml
-$ vim group_vars/client.yml
-$ vim group_vars/database.yml
 $ vim group_vars/server.yml
 ```
 
@@ -70,7 +64,19 @@ $ bin/ping
 
 #### Running Playbooks
 
-To configure the server run the playbook:
+To configure the server run:
+
+```bash
+$ bin/configure
+```
+
+Review and update server configuration values:
+
+```bash
+$ vim configs/server
+```
+
+Build and deploy the server:
 
 ```bash
 $ bin/install

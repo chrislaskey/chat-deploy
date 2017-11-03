@@ -20,15 +20,15 @@ Placeholders are dynamically identified by the pattern `PLACEHOLDER_*`.
 
 
 def replace_placeholder(text, key, value):
-    placeholder = "<<\"{}\">>".format(key)
+    placeholder = "<<\"PLACEHOLDER_{}\">>".format(key)
     replacement = "<<\"{}\">>".format(value)
     return text.replace(placeholder, replacement)
 
 def replace_placeholders(text):
-    placeholders = re.findall(r'<<"(PLACEHOLDER_.*)">>', text)
+    placeholders = re.findall(r'<<"PLACEHOLDER_(.*)">>', text)
     for key in placeholders:
-       value = os.environ.get(key) or ""
-       text = replace_placeholder(text, key, value)
+        value = os.environ.get(key) or ""
+        text = replace_placeholder(text, key, value)
     return text
 
 def main():
