@@ -19,11 +19,21 @@
     dest: "{{ server_build_dir }}"
     accept_hostkey: true
 
-- name: Create build env file
+# Add config placeholders
+
+- name: Add build env file creator
   copy:
-    src: "{{ server_build_dir }}/.envrc.example"
-    dest: "{{ server_build_dir }}/.envrc"
-    remote_src: true
+    src: "build-envrc"
+    dest: "{{ server_build_dir }}/build-envrc"
+    mode: 0755
+
+- name: Create build env file
+  command: bash -lc "./build-envrc .envrc.example .envrc" chdir="{{ server_build_dir }}"
+
+- name: Remove build env file creator
+  file:
+    path: "{{ server_build_dir }}/build-envrc"
+    state: absent
 
 # Build release
 

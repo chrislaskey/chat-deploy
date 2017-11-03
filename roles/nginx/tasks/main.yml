@@ -12,6 +12,14 @@
     dest: /etc/nginx/sites-available/oberon-server
   become: true
 
+- name: Add log rotation
+  template:
+    src: logrotate/nginx
+    dest: /etc/logrotate.d/nginx
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Enable site
   file:
     src: /etc/nginx/sites-available/oberon-server

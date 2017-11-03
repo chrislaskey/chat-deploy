@@ -5,8 +5,8 @@
 
 - hosts: build
   roles:
-    # - common
-    # - elixir
+    - common
+    - elixir
     - server_build
 
 # - hosts: database
@@ -19,11 +19,12 @@
 #     - common
 #     - node
 
-# - hosts: server
-#   environment:
-#     PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
-#   roles:
-#     - common
+- hosts: server
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
+  roles:
+    - common
+    - server_deploy
 #     # - app_server
 #     # - nginx
 #     # - ssl
