@@ -1,11 +1,41 @@
 ---
 
+# Repository variables
+
 server_git_version: master
 server_git_repo: git://github.com/oberon-chat/chat-server.git
+
+# Path variables
 
 local_dir: "{{ playbook_dir }}"
 local_config_dir: "{{ local_dir }}/configs"
 local_server_config: "{{ local_config_dir }}/server"
+
+server_dir: "/home/{{ ansible_user }}/chat_server"
+server_build_dir: "{{ server_dir }}/build"
+server_build_tarball: "{{ server_build_dir }}/_build/prod/rel/chat_server/releases/**/chat_server.tar.gz"
+server_config: "{{ server_dir }}/config"
+server_current_dir: "{{ server_dir }}/current"
+server_logs_dir: "{{ server_dir }}/logs"
+server_next_dir: "{{ server_dir }}/next"
+server_previous_dir: "{{ server_dir }}/previous"
+server_releases_dir: "{{ server_dir }}/releases"
+server_release_tarball: "{{ server_releases_dir }}/{{ server_git_version }}.tar.gz"
+server_app_binary: "{{ server_current_dir }}/bin/chat_server"
+
+# Package variables
+
+elixir_version: "1.5.2-1"
+erlang_version: "1:20.1"
+
+erlang_cookie: "dqpV7DQ+a89e3dYX3lLKDkR5+lGEM4jlyTHxkQzFpO+2kTd/dU1GYEvZ8IneMVqD"
+
+# Domain variables
+
+lets_encrypt_domain: "example.com"
+lets_encrypt_email: "<email>"
+
+# ENV variables
 
 postgres:
   oauth2:
@@ -24,20 +54,10 @@ postgres:
     user: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_USER') }}"
     pass: "{{ lookup('env', 'CHAT_WEBHOOK_POSTGRES_PASS') }}"
 
-server_dir: "/home/{{ ansible_user }}/chat_server"
-server_build_dir: "{{ server_dir }}/build"
-server_build_tarball: "{{ server_build_dir }}/_build/prod/rel/chat_server/releases/**/chat_server.tar.gz"
-server_current_dir: "{{ server_dir }}/current"
-server_next_dir: "{{ server_dir }}/next"
-server_previous_dir: "{{ server_dir }}/previous"
-server_releases_dir: "{{ server_dir }}/releases"
-server_release_tarball: "{{ server_releases_dir }}/{{ server_git_version }}.tar.gz"
-server_app_binary: "{{ server_current_dir }}/bin/chat_server"
+server_oauth2_domain: "{{ lookup('env', 'CHAT_OAUTH2_DOMAIN') }}"
+server_oauth2_port: "{{ lookup('env', 'CHAT_OAUTH2_PORT') }}"
+server_oauth2_port_public: "{{ lookup('env', 'CHAT_OAUTH2_PORT_PUBLIC') }}"
 
-elixir_version: "1.5.2-1"
-erlang_version: "1:20.1"
-
-erlang_cookie: "6hNpFxXDbxatfJ9sRFiKo7vu0AkRVTYmr1AxDsDibf1a0bqCWWsJTmo1usgFTuCA"
-
-lets_encrypt_domain: "example.com"
-lets_encrypt_email: "<email>"
+server_websocket_domain: "{{ lookup('env', 'CHAT_WEBSOCKET_DOMAIN') }}"
+server_websocket_port: "{{ lookup('env', 'CHAT_WEBSOCKET_PORT') }}"
+server_websocket_port_public: "{{ lookup('env', 'CHAT_WEBSOCKET_PORT_PUBLIC') }}"
