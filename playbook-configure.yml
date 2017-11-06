@@ -2,4 +2,4 @@
 
 - hosts: config
   roles:
-    - server_config
+    - config
