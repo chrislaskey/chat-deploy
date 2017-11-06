@@ -64,15 +64,16 @@ $ bin/ping
 
 #### Running Playbooks
 
-To configure the server run:
+To configure the client and server run:
 
 ```bash
 $ bin/configure
 ```
 
-Review and update server configuration values:
+Review and update configuration values:
 
 ```bash
+$ vim configs/client
 $ vim configs/server
 ```
 
