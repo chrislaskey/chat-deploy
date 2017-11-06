@@ -1,4 +1,5 @@
 ---
+
 - name: Download erlang sources package
   get_url:
     url: "{{ erlang.deb_src }}"
