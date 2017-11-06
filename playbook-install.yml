@@ -27,6 +27,11 @@
     - client_start
     # - ssl
 
+# # Run nginx again to ensure SSL changes are in effect
+# - hosts: client
+#   roles:
+#     - nginx
+
 - hosts: server
   environment:
     PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"

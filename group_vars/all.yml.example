@@ -33,11 +33,6 @@ erlang_version: "1:20.1"
 
 erlang_cookie: "dqpV7DQ+a89e3dYX3lLKDkR5+lGEM4jlyTHxkQzFpO+2kTd/dU1GYEvZ8IneMVqD"
 
-# Domain variables
-
-lets_encrypt_domain: "example.com"
-lets_encrypt_email: "<email>"
-
 # ENV variables
 
 postgres:

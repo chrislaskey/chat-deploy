@@ -39,6 +39,7 @@ Copy group var files:
 
 ```bash
 $ cp group_vars/all.yml.example group_vars/all.yml
+$ cp group_vars/client.yml.example group_vars/client.yml
 $ cp group_vars/server.yml.example group_vars/server.yml
 ```
 
@@ -46,6 +47,7 @@ $ cp group_vars/server.yml.example group_vars/server.yml
 
 ```
 $ vim group_vars/all.yml
+$ vim group_vars/client.yml
 $ vim group_vars/server.yml
 ```
 
