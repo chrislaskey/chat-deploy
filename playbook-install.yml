@@ -17,18 +17,24 @@
     - postgres
 
 - hosts: client
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
   roles:
     - common
     - node
+    - nginx
+    - client_deploy
+    - client_start
+    # - ssl
 
 - hosts: server
   environment:
     PATH: "{{ ansible_env.PATH }}:/home/{{ ansible_user }}/"
   roles:
     - common
+    - nginx
     - server_deploy
     - server_start
-    - nginx
     # - ssl
 
 #   # Run nginx again to ensure SSL changes are in effect

@@ -55,7 +55,7 @@
     state: directory
 
 - name: Create release tarball
-  command: bash -lc "tar -czf {{ client_build_tarball }} build" chdir="{{ client_build_dir }}"
+  command: bash -lc "tar -czf {{ client_build_tarball }} -C build ." chdir="{{ client_build_dir }}"
 
 - name: Move build tarball into releases directory
   shell: "mv {{ client_build_tarball }} {{ client_release_tarball }}"

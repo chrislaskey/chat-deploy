@@ -1,0 +1,82 @@
+---
+
+- name: Create client directory
+  file:
+    path: "{{ client_dir }}"
+    state: directory
+
+# Add config
+
+- name: Copy config
+  copy:
+    src: "{{ local_client_config }}"
+    dest: "{{ client_config }}"
+
+# Get release
+
+- name: Create releases directory
+  file:
+    path: "{{ client_releases_dir }}"
+    state: directory
+
+- name: Check if release tarball is already available
+  stat:
+    path: "{{ client_release_tarball }}"
+  register: local_release_tarball
+
+- name: Fetch release tarball from build client
+  synchronize:
+    src: "{{ client_release_tarball }}"
+    dest: rsync://{{ inventory_hostname }}"{{ client_release_tarball }}"
+  delegate_to: "{{ groups['build'][0] }}"
+  when: local_release_tarball.stat.exists == False 
+
+# Open release
+
+- name: Remove next release directory
+  file:
+    path: "{{ client_previous_dir }}"
+    state: absent
+
+- name: Create next release directory
+  file:
+    path: "{{ client_next_dir }}"
+    state: directory
+
+- name: Extract the release tarball
+  unarchive:
+    src: "{{ client_release_tarball }}"
+    dest: "{{ client_next_dir }}"
+    copy: no
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# Replace placeholders in JS files
+
+- name: Add script
+  copy:
+    src: "replace-placeholders"
+    dest: "{{ client_next_dir }}/replace-placeholders"
+    mode: 0755
+
+- name: Update js files
+  command: bash -lc "source {{ client_config }} && ./replace-placeholders static/js/*.js" chdir="{{ client_next_dir }}"
+
+# Rename release directories
+
+- name: Remove previous release directory
+  file:
+    path: "{{ client_previous_dir }}"
+    state: absent
+
+- name: Check if current release directory exists
+  stat:
+    path: "{{ client_current_dir }}"
+  register: current_release
+
+- name: Move current release into previous
+  command: "mv {{ client_current_dir }} {{ client_previous_dir }}"
+  when: current_release.stat.exists == True
+
+- name: Move next release into current
+  command: "mv {{ client_next_dir }} {{ client_current_dir }}"

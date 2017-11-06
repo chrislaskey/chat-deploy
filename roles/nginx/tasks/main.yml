@@ -25,37 +25,6 @@
     state: absent
   become: yes
 
-# Site config
-
-- name: Install nginx config for all server applications
-  template:
-    src: site.j2
-    dest: /etc/nginx/sites-available/oberon-server-websocket
-  vars:
-    sites:
-      - name: "chat-server-websocket"
-        domain: "{{ server_websocket_domain }}"
-        port: "{{ server_websocket_port }}"
-        public_port: "{{ server_websocket_port_public }}"
-      - name: "chat-server-oauth2"
-        domain: "{{ server_oauth2_domain }}"
-        port: "{{ server_oauth2_port }}"
-        public_port: "{{ server_oauth2_port_public }}"
-  become: yes
-
-- name: Enable site
-  file:
-    src: /etc/nginx/sites-available/oberon-server-websocket
-    dest: /etc/nginx/sites-enabled/oberon-server-websocket
-    state: link
-  become: yes
-
-# Application state
-
 - name: Ensure nginx is started
   shell: systemctl start nginx
-  become: yes
-
-- name: Reload nginx configs
-  shell: systemctl reload nginx
   become: yes

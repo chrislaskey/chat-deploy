@@ -7,7 +7,7 @@
 
 # Add config
 
-- name: Create releases directory
+- name: Copy config
   copy:
     src: "{{ local_server_config }}"
     dest: "{{ server_config }}"
