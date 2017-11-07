@@ -1,0 +1,12 @@
+/var/log/nginx/*log {
+    size 500M
+    daily
+    rotate 5000
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        [ ! -f /run/nginx.pid ] || kill -USR1 `cat /run/nginx.pid`
+    endscript
+}

@@ -1,0 +1,4 @@
+---
+
+lets_encrypt_domain: "example.com"
+lets_encrypt_email: "<email>"

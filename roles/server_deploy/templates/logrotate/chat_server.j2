@@ -1,0 +1,9 @@
+{{ server_logs_dir }}/* {
+    size 500M
+    daily
+    rotate 5000
+    missingok
+    notifempty
+    compress
+    sharedscripts
+}

@@ -1,0 +1,66 @@
+{% for site in sites %}
+
+# Configuration for {{ site.name }}
+
+upstream app_{{ loop.index }} {
+  server 127.0.0.1:{{ site.port }} fail_timeout=0;
+}
+
+{% if ssl_cert is defined and ssl_cert.stat.exists == true %}
+server {
+  listen {{ site.public_port }};
+  listen [::]:{{ site.public_port }};
+  server_name {{ site.lets_encrypt_domain }};
+  return 301 https://{{ site.lets_encrypt_domain }}$request_uri;
+}
+{% endif %}
+
+server {
+  {% if ssl_cert is defined and ssl_cert.stat.exists == true %}
+
+  listen {{ site.public_port }} ssl http2;
+  listen [::]:{{ site.public_port }} ssl http2;
+
+  ssl_certificate /etc/letsencrypt/live/{{ site.lets_encrypt_domain }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ site.lets_encrypt_domain }}/privkey.pem;
+
+  {% else %}
+
+  listen {{ site.public_port }};
+  listen [::]:{{ site.public_port }};
+
+  {% endif %}
+
+  server_name {{ site.domain }};
+  root /dev/null;
+
+  try_files $uri/index.html $uri @app;
+
+  location @app {
+    proxy_pass http://app_{{ loop.index }};
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Host $http_host;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_redirect off;
+  }
+
+  # Block SVN / Git / Files that start with .
+  if ($request_uri ~* ^.*/\.(.*)) {
+    return 403;
+  }
+
+  # Limit methods
+  if ($request_method !~ ^(GET|HEAD|POST|PUT|PATCH|DELETE)$ ) {
+    return 444;
+  }
+
+  error_log  /var/log/nginx/{{ site.name }}-error.log;
+  access_log /var/log/nginx/{{ site.name }}-access.log;
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+}
+{% endfor %}

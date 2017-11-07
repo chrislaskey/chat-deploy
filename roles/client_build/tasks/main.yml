@@ -1,0 +1,61 @@
+---
+
+# Setup build
+
+- name: Create client directory
+  file:
+    path: "{{ client_dir }}"
+    state: directory
+
+- name: Clean build directory
+  file:
+    path: "{{ client_build_dir }}/"
+    state: absent
+
+- name: Clone project repository
+  git:
+    repo: "{{ client_git_repo }}"
+    version: "{{ client_git_version }}"
+    dest: "{{ client_build_dir }}"
+    accept_hostkey: true
+
+# Add config placeholders
+
+- name: Add build env file creator
+  copy:
+    src: "build-env"
+    dest: "{{ client_build_dir }}/build-env"
+    mode: 0755
+
+- name: Create build env file
+  command: bash -lc "./build-env .env.example .env" chdir="{{ client_build_dir }}"
+
+- name: Remove build env file creator
+  file:
+    path: "{{ client_build_dir }}/build-env"
+    state: absent
+
+# Build release
+
+- name: Install packages
+  command: bash -lc "yarn install" chdir="{{ client_build_dir }}"
+  environment:
+    NODE_ENV: "production"
+
+- name: Build release
+  command: bash -lc "source .env && node scripts/build.js" chdir="{{ client_build_dir }}"
+  environment:
+    NODE_ENV: "production"
+
+# Archive release
+
+- name: Create releases directory
+  file:
+    path: "{{ client_releases_dir }}"
+    state: directory
+
+- name: Create release tarball
+  command: bash -lc "tar -czf {{ client_build_tarball }} -C build ." chdir="{{ client_build_dir }}"
+
+- name: Move build tarball into releases directory
+  shell: "mv {{ client_build_tarball }} {{ client_release_tarball }}"

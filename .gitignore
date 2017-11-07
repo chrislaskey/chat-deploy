@@ -1,0 +1,9 @@
+hosts/production
+group_vars/all.yml
+group_vars/build.yml
+group_vars/client.yml
+group_vars/database.yml
+group_vars/server.yml
+*.retry
+tmp/*
+configs/*

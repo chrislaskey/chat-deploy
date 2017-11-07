@@ -1,0 +1,15 @@
+---
+
+- name: Install node repository
+  shell: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+
+- name: Install packages
+  apt:
+    name: nodejs
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install global npm packages
+  shell: npm install -g yarn
+  become: true

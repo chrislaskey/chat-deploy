@@ -1,0 +1,63 @@
+---
+
+# Setup build
+
+- name: Create server directory
+  file:
+    path: "{{ server_dir }}"
+    state: directory
+
+- name: Clean build directory
+  file:
+    path: "{{ server_build_dir }}/"
+    state: absent
+
+- name: Clone project repository
+  git:
+    repo: "{{ server_git_repo }}"
+    version: "{{ server_git_version }}"
+    dest: "{{ server_build_dir }}"
+    accept_hostkey: true
+
+# Add config placeholders
+
+- name: Add build env file creator
+  copy:
+    src: "build-envrc"
+    dest: "{{ server_build_dir }}/build-envrc"
+    mode: 0755
+
+- name: Create build env file
+  command: bash -lc "./build-envrc .envrc.example .envrc" chdir="{{ server_build_dir }}"
+
+- name: Remove build env file creator
+  file:
+    path: "{{ server_build_dir }}/build-envrc"
+    state: absent
+
+# Build release
+
+- name: Install elixir mix dependencies
+  command: bash -lc "source .envrc && mix deps.get" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
+
+- name: Compile elixir mix dependencies
+  command: bash -lc "source .envrc && mix compile" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
+
+- name: Run mix release
+  command: bash -lc "source .envrc && mix release" chdir="{{ server_build_dir }}"
+  environment:
+    MIX_ENV: "prod"
+
+# Archive release
+
+- name: Create releases directory
+  file:
+    path: "{{ server_releases_dir }}"
+    state: directory
+
+- name: Move build tarball into releases directory
+  shell: "mv {{ server_build_tarball }} {{ server_release_tarball }}"

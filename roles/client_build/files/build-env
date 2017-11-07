@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+import re
+from optparse import OptionParser
+
+
+"""
+Takes a standard .env file and replaces all variable instances with placeholder
+values. For instance this:
+
+    export PORT=4000
+
+Becomes:
+
+    export PORT=PLACEHOLDER_PORT
+
+Placeholders are dynamically created using the pattern `PLACEHOLDER_<key>`.
+"""
+
+def main():
+    parser = OptionParser("Usage: %prog <source-file> <destination-file>")
+    (options, args) = parser.parse_args()
+
+    if len(args) != 2:
+        parser.error("Incorrect number of arguments")
+
+    with open(args[0]) as input:
+        with open(args[1], "w") as output:
+            for line in input:
+                if "=" in line:
+                    line = re.sub(r'^export (.*)=.*$', r'export \1=PLACEHOLDER_\1', line)
+                output.write(line)
+
+
+if __name__ == "__main__":
+    main()

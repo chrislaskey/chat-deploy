@@ -1,0 +1,25 @@
+---
+
+# Add nginx site config
+
+- name: Install nginx config for all client applications
+  template:
+    src: nginx.j2
+    dest: /etc/nginx/sites-available/oberon-client
+  vars:
+    name: "chat-client"
+    public_port: "80"
+    root: "{{ client_current_dir }}"
+    domain: "localhost"
+  become: yes
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/oberon-client
+    dest: /etc/nginx/sites-enabled/oberon-client
+    state: link
+  become: yes
+
+- name: Reload nginx configs
+  shell: systemctl reload nginx
+  become: yes

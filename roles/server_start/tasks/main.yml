@@ -1,0 +1,57 @@
+---
+
+# Startup tasks
+
+- name: Run database migrations
+  shell: "{{ server_app_binary }} command release_manager migrate"
+  ignore_errors: yes
+  run_once: True
+
+# Add service monitoring
+
+- name: Add chat_server as a systemd service
+  template:
+    src: etc/systemd/system/chat_server.service.j2
+    dest: /etc/systemd/system/chat_server.service
+  become: yes
+
+- name: Enable chat_server on restart
+  shell: systemctl enable chat_server
+  become: yes
+
+- name: Reload systemctl daemon
+  shell: systemctl daemon-reload
+  become: yes
+
+- name: Restart chat_server
+  shell: systemctl restart chat_server
+  become: yes
+
+# Add nginx site config
+
+- name: Install nginx config for all server applications
+  template:
+    src: nginx.j2
+    dest: /etc/nginx/sites-available/oberon-server-websocket
+  vars:
+    sites:
+      - name: "chat-server-websocket"
+        domain: "{{ server_websocket_domain }}"
+        port: "{{ server_websocket_port }}"
+        public_port: "{{ server_websocket_port_public }}"
+      - name: "chat-server-oauth2"
+        domain: "{{ server_oauth2_domain }}"
+        port: "{{ server_oauth2_port }}"
+        public_port: "{{ server_oauth2_port_public }}"
+  become: yes
+
+- name: Enable site
+  file:
+    src: /etc/nginx/sites-available/oberon-server-websocket
+    dest: /etc/nginx/sites-enabled/oberon-server-websocket
+    state: link
+  become: yes
+
+- name: Reload nginx configs
+  shell: systemctl reload nginx
+  become: yes

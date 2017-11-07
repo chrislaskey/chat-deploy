@@ -1,0 +1,58 @@
+---
+
+- name: Create config directory
+  file:
+    path: "{{ local_config_dir }}"
+    state: directory
+
+# Client client
+
+- name: Clone project repository
+  git:
+    repo: "{{ client_git_repo }}"
+    version: "{{ client_git_version }}"
+    dest: "{{ local_dir }}/tmp"
+    accept_hostkey: true
+
+- name: Check if client config already exists
+  stat:
+    path: "{{ local_client_config }}"
+  register: local_client_config_file
+
+- name: Backup current config
+  command: bash -lc "mv {{ local_client_config }} {{ local_client_config }}.$(date +%F-%H%M%S)" chdir="{{ local_dir }}"
+  when: local_client_config_file.stat.exists == True
+
+- name: Create new config
+  command: bash -lc "mv {{ local_dir }}/tmp/.env.example {{ local_client_config }}" chdir="{{ local_dir }}"
+
+- name: Cleanup project repository
+  file:
+    path: "{{ local_dir }}/tmp"
+    state: absent
+
+# Server config
+
+- name: Clone project repository
+  git:
+    repo: "{{ server_git_repo }}"
+    version: "{{ server_git_version }}"
+    dest: "{{ local_dir }}/tmp"
+    accept_hostkey: true
+
+- name: Check if server config already exists
+  stat:
+    path: "{{ local_server_config }}"
+  register: local_server_config_file
+
+- name: Backup current config
+  command: bash -lc "mv {{ local_server_config }} {{ local_server_config }}.$(date +%F-%H%M%S)" chdir="{{ local_dir }}"
+  when: local_server_config_file.stat.exists == True
+
+- name: Create new config
+  command: bash -lc "mv {{ local_dir }}/tmp/.envrc.example {{ local_server_config }}" chdir="{{ local_dir }}"
+
+- name: Cleanup project repository
+  file:
+    path: "{{ local_dir }}/tmp"
+    state: absent

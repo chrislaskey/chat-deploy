@@ -1,0 +1,125 @@
+---
+
+- name: Create server directory
+  file:
+    path: "{{ server_dir }}"
+    state: directory
+
+# Add config
+
+- name: Copy config
+  copy:
+    src: "{{ local_server_config }}"
+    dest: "{{ server_config }}"
+
+# Get release
+
+- name: Create releases directory
+  file:
+    path: "{{ server_releases_dir }}"
+    state: directory
+
+- name: Check if release tarball is already available
+  stat:
+    path: "{{ server_release_tarball }}"
+  register: local_release_tarball
+
+- name: Fetch release tarball from build server
+  synchronize:
+    src: "{{ server_release_tarball }}"
+    dest: rsync://{{ inventory_hostname }}"{{ server_release_tarball }}"
+  delegate_to: "{{ groups['build'][0] }}"
+  when: local_release_tarball.stat.exists == False 
+
+# Open release
+
+- name: Remove next release directory
+  file:
+    path: "{{ server_previous_dir }}"
+    state: absent
+
+- name: Create next release directory
+  file:
+    path: "{{ server_next_dir }}"
+    state: directory
+
+- name: Extract the release tarball
+  unarchive:
+    src: "{{ server_release_tarball }}"
+    dest: "{{ server_next_dir }}"
+    copy: no
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# Update release files - vm.args
+
+- name: Create vm.args from template
+  template:
+    src: vm.args.j2
+    dest: "{{ server_next_dir }}/vm.args"
+
+- name: Replace vm.args
+  shell: "mv {{ server_next_dir }}/vm.args {{ server_next_dir }}/releases/**/"
+
+# Update release files - sys.config
+
+- name: Backup sys.config template
+  shell: "cp {{ server_next_dir }}/releases/**/sys.config {{ server_next_dir }}/sys.config.template"
+
+- name: Add sys.config updater
+  copy:
+    src: "update-sysconfig"
+    dest: "{{ server_next_dir }}/update-sysconfig"
+    mode: 0755
+
+- name: Update sys.config file
+  command: bash -lc "source {{ server_config }} && ./update-sysconfig sys.config.template sys.config" chdir="{{ server_next_dir }}"
+
+- name: Replace sys.config
+  shell: "mv {{ server_next_dir }}/sys.config {{ server_next_dir }}/releases/**/"
+
+# Update log directory
+
+- name: Create logs directory
+  file:
+    path: "{{ server_logs_dir }}"
+    state: directory
+
+- name: Create release var directory
+  file:
+    path: "{{ server_next_dir }}/var"
+    state: directory
+
+- name: Create symlink to logs in release directory
+  file:
+    src: "{{ server_logs_dir }}"
+    dest: "{{ server_next_dir }}/var/log"
+    state: link
+
+- name: Add log rotation
+  template:
+    src: logrotate/chat_server.j2
+    dest: /etc/logrotate.d/chat_server
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+# Rename release directories
+
+- name: Remove previous release directory
+  file:
+    path: "{{ server_previous_dir }}"
+    state: absent
+
+- name: Check if current release directory exists
+  stat:
+    path: "{{ server_current_dir }}"
+  register: current_release
+
+- name: Move current release into previous
+  command: "mv {{ server_current_dir }} {{ server_previous_dir }}"
+  when: current_release.stat.exists == True
+
+- name: Move next release into current
+  command: "mv {{ server_next_dir }} {{ server_current_dir }}"

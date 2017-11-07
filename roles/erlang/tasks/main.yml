@@ -1,0 +1,21 @@
+---
+
+- name: Download erlang sources package
+  get_url:
+    url: "{{ erlang.deb_src }}"
+    dest: "{{ erlang.deb_dest }}"
+  become: yes
+
+- name: Install erlang sources from deb file
+  apt:
+    deb: "{{ erlang.deb_dest }}"
+    state: present
+  become: yes
+
+- name: Install erlang packages
+  apt:
+    name: "{{ item }}={{ erlang_version }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ erlang.packages }}"
+  become: yes

@@ -1,0 +1,14 @@
+[config]
+localhost ansible_connection=local
+
+[build]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
+
+[client]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
+
+[server]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud
+
+[database]
+insert-your-host-here.com ansible_port=22 ansible_user=ibmcloud

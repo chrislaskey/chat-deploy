@@ -1,0 +1,30 @@
+---
+
+- name: Install packages
+  apt:
+    name: nginx
+    state: present
+  become: yes
+
+- name: Add log rotation
+  template:
+    src: logrotate/nginx
+    dest: /etc/logrotate.d/nginx
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Enable nginx on restart
+  shell: systemctl enable nginx
+  become: yes
+
+- name: Disable default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  become: yes
+
+- name: Ensure nginx is started
+  shell: systemctl start nginx
+  become: yes
