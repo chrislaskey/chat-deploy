@@ -24,8 +24,8 @@ Follow the [Ansible Installation Guide](https://docs.ansible.com/ansible/intro_i
 Clone the project locally:
 
 ```bash
-$ git clone git@github.com:oberon-chat/chat-deploy-ansible.git
-$ cd chat-deploy-ansible
+$ git clone git@github.com:oberon-chat/chat-deploy.git
+$ cd chat-deploy
 ```
 
 Copy the inventory file and update the values:
