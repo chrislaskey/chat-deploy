@@ -12,7 +12,19 @@ server_git_repo: git://github.com/oberon-chat/chat-server.git
 
 local_dir: "{{ playbook_dir }}"
 local_config_dir: "{{ local_dir }}/configs"
+local_client_config: "{{ local_config_dir }}/client"
 local_server_config: "{{ local_config_dir }}/server"
+
+client_dir: "/home/{{ ansible_user }}/chat_client"
+client_build_dir: "{{ client_dir }}/build"
+client_build_tarball: "{{ client_dir }}/build.tar.gz"
+client_config: "{{ client_dir }}/config"
+client_current_dir: "{{ client_dir }}/current"
+client_logs_dir: "{{ client_dir }}/logs"
+client_next_dir: "{{ client_dir }}/next"
+client_previous_dir: "{{ client_dir }}/previous"
+client_releases_dir: "{{ client_dir }}/releases"
+client_release_tarball: "{{ client_releases_dir }}/{{ client_git_version }}.tar.gz"
 
 server_dir: "/home/{{ ansible_user }}/chat_server"
 server_build_dir: "{{ server_dir }}/build"
