@@ -3,7 +3,7 @@
 # Repository variables
 
 client_git_version: master
-client_git_repo: git://github.com/oberon-chat/chat-server.git
+client_git_repo: git://github.com/oberon-chat/chat-client.git
 
 server_git_version: master
 server_git_repo: git://github.com/oberon-chat/chat-server.git
