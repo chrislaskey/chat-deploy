@@ -28,3 +28,14 @@
   with_dict: "{{ postgres }}"
   become: true
   become_user: postgres
+
+- name: Create users
+  postgresql_user:
+    db: "{{ item.value.db }}"
+    name: "{{ item.value.user }}"
+    password: "{{ item.value.pass }}"
+    encrypted: true
+    role_attr_flags: "CREATEDB,NOSUPERUSER"
+  with_dict: "{{ postgres }}"
+  become: true
+  become_user: postgres
