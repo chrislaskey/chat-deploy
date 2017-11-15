@@ -10,11 +10,13 @@
     - node
     - client_build
     - server_build
+  tags: build
 
 - hosts: database
   roles:
     - common
     - postgres
+  tags: database
 
 - hosts: client
   environment:
@@ -26,6 +28,7 @@
     - client_deploy
     - client_start
     # - ssl
+  tags: client
 
 # # Run nginx again to ensure SSL changes are in effect
 # - hosts: client
@@ -41,6 +44,7 @@
     - server_deploy
     - server_start
     # - ssl
+  tags: server
 
 #   # Run nginx again to ensure SSL changes are in effect
 # - hosts: server
