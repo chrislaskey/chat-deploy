@@ -16,6 +16,15 @@
   apt:
     name:
       - postgresql-9.6
+    state: present
+    update_cache: true
+  ignore_errors: true
+  become: true
+
+- name: Install packages
+  apt:
+    name:
+      - postgresql-9.6
       - postgresql-contrib-9.6
       - python-psycopg2
     state: present
