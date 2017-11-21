@@ -52,7 +52,7 @@ server {
   }
 
   # Limit methods
-  if ($request_method !~ ^(GET|HEAD|POST|PUT|PATCH|DELETE)$ ) {
+  if ($request_method !~ ^(GET|HEAD|OPTIONS|POST|PUT|PATCH|DELETE)$ ) {
     return 444;
   }
 
